@@ -23,8 +23,8 @@ const Score = ({ value }: IProps) => {
 
 /**
  * Check for positiv or negativ number
- * @param number 
- * @returns 
+ * @param number
+ * @returns
  */
 const setTextColor = (number) => {
   if (number > 0) {
