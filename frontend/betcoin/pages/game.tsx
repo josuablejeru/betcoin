@@ -1,5 +1,4 @@
 import { Center, VStack } from "@chakra-ui/react";
-
 import BetPlacer from "../components/betPlacer";
 
 const Game = () => {

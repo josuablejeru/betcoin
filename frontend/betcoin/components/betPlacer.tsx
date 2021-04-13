@@ -1,17 +1,18 @@
 import { VStack } from "@chakra-ui/layout";
-import axios from "axios";
-import BetPlacerButton from "../components/betPlacerButton";
 import CoinTicker from "../components/coinTicker";
 import Score from "../components/score";
+import BetForm from './betForm';
+import { CoinProvider } from "../contexts/coinContext";
 
 const BetPlacer = () => {
   return (
     <>
       <VStack>
-        <Score value={-10} />
-        <BetPlacerButton title="Price will go UP" value="UP" />
-        <CoinTicker />
-        <BetPlacerButton title="Price will go DOWN" value="DOWN" />
+        <CoinProvider>
+          <Score value={-10} />
+          <CoinTicker />
+          <BetForm />
+        </CoinProvider>
       </VStack>
     </>
   );
