@@ -156,7 +156,8 @@ Thumbs.db
 logs
 **/*.backup.*
 **/*.back.*
-
+next-env.d.ts
+.next/
 node_modules
 bower_components
 
