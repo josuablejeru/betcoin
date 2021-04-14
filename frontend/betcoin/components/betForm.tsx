@@ -22,8 +22,8 @@ const BetForm = ({ counterValue, setCounter }: IProps) => {
     event.preventDefault();
 
     const data = new FormData(event.target);
-    const bet = data.get("bet");
-    const startValue = data.get("coinValue");
+    const bet = data.get("bet").toString();
+    const startValue = parseFloat(data.get("coinValue").toString());
 
     await sleep(6); // TODO: change timout
 

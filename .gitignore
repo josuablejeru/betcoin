@@ -160,6 +160,7 @@ next-env.d.ts
 .next/
 node_modules
 bower_components
+out/
 
 *.sublime*
 
