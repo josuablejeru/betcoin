@@ -1,6 +1,4 @@
-
-variable "aws_region" {
-  description = "Default AWS Region"
+variable "domain_name" {
+  description = "domain url"
   type        = string
-  default     = "eu-central-1"
 }
