@@ -2,8 +2,20 @@ import { RadioGroup, Radio } from "@chakra-ui/react";
 import { CoinContext } from "../contexts/coinContext";
 import { useContext } from "react";
 
-const BetForm = () => {
+interface IProps {
+  setCounter: Function
+}
+
+const BetForm = ({setCounter}: IProps) => {
   const [coinValue, _] = useContext(CoinContext);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const time = new Date(Date.now())
+    const data = new FormData(event.target);
+    setCounter(1);
+    console.log(data.get("bet"), data.get("coinValue"), time);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -21,10 +33,6 @@ const BetForm = () => {
   );
 };
 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  const data = new FormData(event.target);
-  console.log(data.get("bet"), data.get("coinValue"));
-};
+
 
 export default BetForm;
