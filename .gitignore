@@ -180,6 +180,7 @@ sketch
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+secrets.tfvars
 
 # Crash log files
 crash.log
