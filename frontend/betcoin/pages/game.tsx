@@ -1,10 +1,12 @@
-import { Center, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import BetPlacer from "../components/betPlacer";
 
 const Game = () => {
   return (
     <>
-      <BetPlacer />
+      <Box p={8}>
+        <BetPlacer />
+      </Box>
     </>
   );
 };
