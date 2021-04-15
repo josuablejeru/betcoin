@@ -1,5 +1,4 @@
-import { Text, Box } from "@chakra-ui/react";
-import { BetContext } from "../contexts/coinContext";
+import { Box } from "@chakra-ui/react";
 import { useRadio } from "@chakra-ui/react";
 
 interface IProps {
