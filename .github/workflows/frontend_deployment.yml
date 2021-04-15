@@ -9,20 +9,6 @@ on:
       - "frontend/betcoin/**"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node: '15.x'
-      - name: Install dependencies
-        working-directory: ./frontend/betcoin/
-        run: |
-          npm install -g yarn
-          yarn install
-          yarn test
-
   deploy:
     runs-on: ubuntu-latest
     steps:
