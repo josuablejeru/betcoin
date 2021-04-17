@@ -7,7 +7,7 @@ import boto3
 TABLE_NAME = os.getenv('DYNAMODB_TABLE')
 
 
-def put_guess(userId, point, guess,  table=None, table_name=None):
+def put_guess(userId, point, guess, table=None, table_name=None):
     """
     time, btc_set, btc_after,
     """
@@ -16,21 +16,23 @@ def put_guess(userId, point, guess,  table=None, table_name=None):
 
     # create transaction on user
     r = table.put_item(Item={
-        'userId': userId,
-        'point': point,
-        'guess': guess
+        'UserId': userId,
+        'Score': point,
+        'Guess': guess
     })
     return r
 
 
 def store_guess(event, context):
-    body = {
-        "input": event,
-    }
+
+    dynamo_response = put_guess(userId=event['userId'],
+                                point=event['point'],
+                                guess=event['guess'],
+                                table_name=TABLE_NAME)
 
     response = {
         "statusCode": 201,
-        "body": json.dumps(body)
+        "body": json.dumps(dynamo_response)
     }
 
     return response
