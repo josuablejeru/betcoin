@@ -40,10 +40,11 @@ provider:
 package:
  patterns:
    - '!node_modules'
+   - '!lib'
 
 functions:
   store_guess:
-    handler: handler.store_guess
+    handler: src/handler.store_guess
     events:
       - http:
           path: guess/store
