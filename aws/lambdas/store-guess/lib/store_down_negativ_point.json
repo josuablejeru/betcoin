@@ -1,10 +1,9 @@
 {
-    "userId": "7eed9a40-edba-4f0d-8fc9-2aff889d63ab",
-    "point": -1,
-    "guess": "DOWN",
-    "time": "2021-04-15T20:41:51+00:00",
-    "btc_value_set": "60000,32",
-    "btc_value_result": "602000,32",
-    "currency": "USD"
-  }
-  
+  "userId": "7eed9a40-edba-4f0d-8fc9-2aff889d63ab",
+  "point": -1,
+  "guess": "DOWN",
+  "time": "2021-04-15T20:41:51+00:00",
+  "btc_value_set": "60000,32",
+  "btc_value_result": "602000,32",
+  "currency": "USD"
+}

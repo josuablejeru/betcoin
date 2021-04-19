@@ -24,10 +24,11 @@ def put_guess(userId, point, guess, table=None, table_name=None):
 
 
 def store_guess(event, context):
+    body = json.loads(event['body'])
 
-    dynamo_response = put_guess(userId=event['userId'],
-                                point=event['point'],
-                                guess=event['guess'],
+    dynamo_response = put_guess(userId=body['userId'],
+                                point=body['point'],
+                                guess=body['guess'],
                                 table_name=TABLE_NAME)
 
     response = {

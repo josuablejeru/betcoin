@@ -45,11 +45,6 @@ package:
 functions:
   store_guess:
     handler: src/handler.store_guess
-    events:
-      - http:
-          path: guess/store
-          method: post
-          # private: true # requires `x-api-key` in request header
 
     # Define function environment variables here
     environment:

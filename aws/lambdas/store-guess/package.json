@@ -5,9 +5,11 @@
   "scripts": {
     "deploy:dev": "sls deploy --stage dev",
     "deploy:prod": "sls deploy --stage prod",
+    "remove:dev": "sls remove --stage dev",
+    "remove:prod": "sls remove --stage prod",
     "getvars:dev": "sls print --stage dev",
     "getvars:prod": "sls print --stage prod",
-    "invoke": "sls invoke -f store_guess --stage dev --path lib/store_up_positiv_point.json"
+    "invoke:dev": "sls invoke -f store_guess --stage dev --path lib/store_up_positiv_point.json"
   },
   "devDependencies": {
     "serverless-python-requirements": "^5.1.1"
