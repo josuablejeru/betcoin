@@ -17,7 +17,7 @@ terraform {
 }
 
 provider "aws" {
-  region                  = "eu-central-1"
+  region                  = var.aws_region
   shared_credentials_file = "~/.aws/credentials"
 }
 
@@ -30,3 +30,5 @@ provider "github" {
   token = var.github_token
   owner = var.github_owner
 }
+
+data "aws_caller_identity" "current" {}

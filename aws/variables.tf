@@ -1,3 +1,9 @@
+variable "aws_region" {
+  description = "aws_region"
+  type        = string
+  default = "eu-central-1"
+}
+
 variable "domain_name" {
   description = "domain url"
   type        = string
