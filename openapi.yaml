@@ -11,7 +11,12 @@ info:
     name: MIT
     url: https://choosealicense.com/licenses/mit/
   version: 1.0.0
-  
+
+servers:
+- url: "https://api.betcoin-app.xyz/{basePath}"
+  variables:
+    basePath:
+      default: "/dev"
 
 paths:
   /guess:
