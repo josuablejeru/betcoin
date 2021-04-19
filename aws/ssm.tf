@@ -9,8 +9,8 @@ resource "aws_ssm_parameter" "user_score_dynamodb_arn" {
 }
 
 resource "aws_ssm_parameter" "user_score_dynamodb" {
-  name = "/betcoin/${terraform.workspace}/user-score-dynamodb-name"
-  type = "String"
+  name  = "/betcoin/${terraform.workspace}/user-score-dynamodb-name"
+  type  = "String"
   value = aws_dynamodb_table.user_score.id
 
   depends_on = [

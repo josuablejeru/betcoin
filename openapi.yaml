@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: betcoin
+  description: betcoin app
+  termsOfService: 'dd'
+  contact:
+    name: Josua Blejeru
+    url: https://github.com/josuablejeru
+    email: josua.blejeru@gmail.com
+  license:
+    name: MIT
+    url: https://choosealicense.com/licenses/mit/
+  version: 1.0.0
+  
+
+paths:
+  /guess:
+    post:
+      summary: Stores a new guess
+      operationId: storeGuess
+      requestBody:
+        description: new guess to be stored
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGuess'
+            examples:
+              NewGuess:
+                value:
+                  userId: 'foo'
+                  point: -1
+                  guess: "DOWN"
+                  time: '2021-04-17T15:20:08.426Z'
+
+      x-amazon-apigateway-integration:
+        uri:
+          arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:644360156824:function:store-guess-dev-store_guess/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+        
+      responses:
+        '201':
+          description: New guess is created
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Guess'
+          
+        '400':
+          description: Missing field
+    
+  # /score:
+  #   get:
+  #     description: Get the current score of the user
+  #     responses:
+  #       '200':
+  #         description: Returns the current score of the user
+  #         content:
+  #           'application/json':
+  #             schema:
+  #               type: object
+  #               items:
+  #                 $ref: '#/components/schemas/UserScore'
+
+components:
+  schemas:
+    NewGuess:
+      type: object
+      properties:
+        userId:
+          type: string
+        point:
+          type: integer
+          format: int64
+        guess:
+          type: string
+          enum: 
+            - "UP"
+            - "DOWN"
+        time:
+          type: string
+          format: date-time
+    
+    Guess:
+      type: object
+      properties:
+        guessId:
+          type: string
+        score:
+          type: integer
+
+    UserScore:
+      type: object
+      properties:
+        score:
+          type: integer
+        lastUpdated:
+          type: string
+          format: date-time
