@@ -7,10 +7,10 @@ resource "aws_s3_bucket_policy" "s3-policy" {
 # Frontend hosting
 data "aws_iam_policy_document" "s3policy" {
   statement {
+    sid = "AllowCloudFront"
     actions = ["s3:GetObject"]
 
     resources = [
-      aws_s3_bucket.website.arn,
       "${aws_s3_bucket.website.arn}/*"
     ]
     principals {

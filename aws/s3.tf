@@ -1,6 +1,11 @@
 resource "aws_s3_bucket" "website" {
   bucket = "${terraform.workspace}-betcoin"
-  acl    = "private"
+  acl    = "public-read"
+
+  website {
+    index_document = "index.html"
+    error_document = "404.html"
+  }
 
   tags = {
     "stage" : terraform.workspace,
@@ -10,8 +15,6 @@ resource "aws_s3_bucket" "website" {
 
 resource "aws_s3_bucket_public_access_block" "s3block" {
   bucket                  = aws_s3_bucket.website.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  block_public_acls       = false
+  block_public_policy     = false 
 }
