@@ -16,13 +16,15 @@ servers:
 - url: "https://api.betcoin-app.xyz/{basePath}"
   variables:
     basePath:
-      default: "/dev"
+      default: "dev"
 
 paths:
   /guess:
     post:
       summary: Stores a new guess
       operationId: storeGuess
+      tags:
+        - CORS
       requestBody:
         description: new guess to be stored
         required: true
@@ -36,7 +38,6 @@ paths:
                   userId: 'foo'
                   point: -1
                   guess: "DOWN"
-                  time: '2021-04-17T15:20:08.426Z'
 
       x-amazon-apigateway-integration:
         uri:
@@ -44,14 +45,28 @@ paths:
         responses:
           default:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
         
       responses:
-        '201':
+        "200":
           description: New guess is created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -90,10 +105,7 @@ components:
           enum: 
             - "UP"
             - "DOWN"
-        time:
-          type: string
-          format: date-time
-    
+   
     Guess:
       type: object
       properties:
