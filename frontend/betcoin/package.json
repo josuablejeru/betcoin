@@ -9,7 +9,7 @@
     "test": "jest",
     "type-check": "tsc",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "generate": "openapi-generator-cli generate -i ./../../openapi.yaml -g typescript-fetch -o generated-sources/openapi --additional-properties=supportsES6=true,enumPropertyNaming=UPPERCASE,withInterfaces=true"
+    "generate": "openapi-generator-cli generate -i ./../../openapi.yaml -g typescript-axios -o generated-sources/openapi --additional-properties=supportsES6=true,enumPropertyNaming=UPPERCASE,withInterfaces=true"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.5.0",
@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.2.5",
+    "@types/axios": "^0.14.0",
     "@types/jest": "^26.0.22",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
@@ -38,6 +39,7 @@
     "jest": "^26.6.3",
     "pre-commit": "^1.2.2",
     "prettier": "^2.2.1",
+    "tslib": "^2.2.0",
     "typescript": "^4.2.4"
   },
   "pre-commit": [
