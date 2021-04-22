@@ -2,6 +2,8 @@ import os
 import json
 from pprint import pprint
 import boto3
+import uuid
+import random
 
 
 TABLE_NAME = os.getenv('DYNAMODB_TABLE')
@@ -24,16 +26,11 @@ def put_guess(userId, point, guess, table=None, table_name=None):
 
 
 def store_guess(event, context):
-    body = json.loads(event['body'])
-
-    dynamo_response = put_guess(userId=body['userId'],
-                                point=body['point'],
-                                guess=body['guess'],
-                                table_name=TABLE_NAME)
 
     response = {
         "statusCode": 201,
-        "body": json.dumps(dynamo_response)
+        "body": json.dumps({'guessId': str(uuid.uuid4()),
+                            'score': random.randrange(-10, 10, 1)})
     }
 
     return response

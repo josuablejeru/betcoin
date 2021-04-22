@@ -16,13 +16,53 @@ servers:
 - url: "https://api.betcoin-app.xyz/{basePath}"
   variables:
     basePath:
-      default: "/dev"
+      default: "dev"
 
 paths:
   /guess:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers in API Gateway
+      tags:
+        - CORS
+      responses:
+        "200":
+          description: New guess is created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            content: {}
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |
+                {}
+
     post:
       summary: Stores a new guess
       operationId: storeGuess
+      tags:
+        - CORS
       requestBody:
         description: new guess to be stored
         required: true
@@ -36,32 +76,39 @@ paths:
                   userId: 'foo'
                   point: -1
                   guess: "DOWN"
-                  time: '2021-04-17T15:20:08.426Z'
+
+      responses:
+        "201":
+          description: foobar
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guess'
+
+        "400":
+          description: Missing field
 
       x-amazon-apigateway-integration:
         uri:
           arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${store_guess_function}/invocations
         responses:
-          default:
-            statusCode: "200"
+          "201":
+            statusCode: "201"
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
-        
-      responses:
-        '201':
-          description: New guess is created
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Guess'
-          
-        '400':
-          description: Missing field
-    
+
   # /score:
   #   get:
   #     description: Get the current score of the user
@@ -79,6 +126,10 @@ components:
   schemas:
     NewGuess:
       type: object
+      required:
+        - userId
+        - point
+        - guess
       properties:
         userId:
           type: string
@@ -90,12 +141,12 @@ components:
           enum: 
             - "UP"
             - "DOWN"
-        time:
-          type: string
-          format: date-time
-    
+   
     Guess:
       type: object
+      required:
+        - guessId
+        - score
       properties:
         guessId:
           type: string
