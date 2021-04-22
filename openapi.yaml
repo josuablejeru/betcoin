@@ -39,21 +39,6 @@ paths:
                   point: -1
                   guess: "DOWN"
 
-      x-amazon-apigateway-integration:
-        uri:
-          arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${store_guess_function}/invocations
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Headers: "'*'"
-              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        passthroughBehavior: "when_no_match"
-        httpMethod: "POST"
-        contentHandling: "CONVERT_TO_TEXT"
-        type: "aws_proxy"
-        
       responses:
         "200":
           description: New guess is created
@@ -70,12 +55,27 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Guess'
-          
-        '400':
+                $ref: '#/components/schemas/Guess'
+
+        "400":
           description: Missing field
+
+      x-amazon-apigateway-integration:
+        uri:
+          arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${store_guess_function}/invocations
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+        
+      
     
   # /score:
   #   get:
@@ -94,6 +94,10 @@ components:
   schemas:
     NewGuess:
       type: object
+      required:
+        - userId
+        - point
+        - guess
       properties:
         userId:
           type: string
@@ -108,6 +112,9 @@ components:
    
     Guess:
       type: object
+      required:
+        - guessId
+        - score
       properties:
         guessId:
           type: string
