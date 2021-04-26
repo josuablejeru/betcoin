@@ -19,6 +19,33 @@ servers:
       default: "dev"
 
 paths:
+  /session:
+    get:
+      summary: Game Session
+      description: |
+        Create a new Game session for the user and returns the session cookie
+      responses:
+        "201":
+          description: The session id is returned in a cookie named `SESSION_ID`. This cookie is required for all game related endpoints
+          headers:
+            Set-Cookie:
+              schema: 
+                type: string
+                example: SESSION_ID=abcde12345; Path=/; HttpOnly
+          content:
+            application/json: {}
+
+      x-amazon-apigateway-integration:
+        uri:
+          arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${create_session_function}/invocations
+        responses:
+          "201":
+            statusCode: "201"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+             
   /guess:
     options:
       summary: CORS support
@@ -26,6 +53,9 @@ paths:
         Enable CORS by returning correct headers in API Gateway
       tags:
         - CORS
+      security:
+        - sessionCookie: []
+      
       responses:
         "200":
           description: New guess is created
@@ -109,20 +139,37 @@ paths:
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
 
-  # /score:
-  #   get:
-  #     description: Get the current score of the user
-  #     responses:
-  #       '200':
-  #         description: Returns the current score of the user
-  #         content:
-  #           'application/json':
-  #             schema:
-  #               type: object
-  #               items:
-  #                 $ref: '#/components/schemas/UserScore'
+  /score:
+    get:
+      description: Get the current score of the user
+      responses:
+        '200':
+          description: Returns the current score of the user
+          content:
+            'application/json':
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/UserScore'
+
+      x-amazon-apigateway-integration:
+        uri:
+          arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${get_score_function}/invocations
+        responses:
+          "200":
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
 
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: SESSION_ID
+
   schemas:
     NewGuess:
       type: object
@@ -131,7 +178,7 @@ components:
         - point
         - guess
       properties:
-        userId:
+        sessionId:
           type: string
         point:
           type: integer
@@ -141,14 +188,14 @@ components:
           enum: 
             - "UP"
             - "DOWN"
-   
+
     Guess:
       type: object
       required:
         - guessId
         - score
       properties:
-        guessId:
+        sessionId:
           type: string
         score:
           type: integer

@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "aws_region"
   type        = string
-  default = "eu-central-1"
+  default     = "eu-central-1"
 }
 
 variable "domain_name" {
@@ -19,6 +19,12 @@ variable "aws_secret_access_key" {
   description = "AWS secret access key"
   type        = string
   sensitive   = true
+}
+
+variable "function_names" {
+  description = "Lambda function names used by betcoin api"
+  type        = list(string)
+  default     = ["create_session", "store_guess", "get_score"]
 }
 
 variable "github_repo" {

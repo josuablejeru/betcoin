@@ -7,7 +7,7 @@ resource "aws_s3_bucket_policy" "s3-policy" {
 # Frontend hosting
 data "aws_iam_policy_document" "s3policy" {
   statement {
-    sid = "AllowCloudFront"
+    sid     = "AllowCloudFront"
     actions = ["s3:GetObject"]
 
     resources = [
@@ -22,10 +22,11 @@ data "aws_iam_policy_document" "s3policy" {
 
 # API Gateway lambda invokation
 resource "aws_lambda_permission" "lambda_permission" {
-  statement_id  = "AllowMyDemoAPIInvoke"
+  count         = length(var.function_names)
+  statement_id  = "AllowBetcoinApiLambdaInvokation"
   action        = "lambda:InvokeFunction"
-  function_name = "store-guess-dev-store_guess"
+  function_name = "betcoin-${terraform.workspace}-${var.function_names[count.index]}"
   principal     = "apigateway.amazonaws.com"
 
-   source_arn = "${aws_api_gateway_rest_api.openapi.execution_arn}/*"
+  source_arn = "${aws_api_gateway_rest_api.openapi.execution_arn}/*"
 }
