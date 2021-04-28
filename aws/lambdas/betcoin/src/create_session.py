@@ -22,7 +22,7 @@ def handler(event, context):
         "statusCode": 201,
         "multiValueHeaders": {
             "Set-Cookie": [
-                f"SESSION_ID={session.get('session_id')}; Path=/; SameSite=None; Secure"
+                f"SESSION_ID={session.get('session_id')}; Domain=betcoin-app.xyz; Path=/; SameSite=None; Secure"
             ]
         },
         "body": json.dumps(session.get("response"))
