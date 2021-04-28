@@ -3,15 +3,15 @@ import { NewGuessGuessEnum } from "../generated-sources/openapi";
 import { calculatePoint } from "../utils";
 
 export class GuessRequest {
-  private userId: string;
+  private sessionId: string;
   private btc_set: number;
   private btc_after: number;
   private bet: NewGuessGuessEnum;
   private point: number;
   private api: CORSApi;
 
-  public constructor(userId: string) {
-    this.userId = userId;
+  public constructor(sessionId: string) {
+    this.sessionId = sessionId;
     this.api = new CORSApi();
   }
 
@@ -28,14 +28,14 @@ export class GuessRequest {
     this.point = calculatePoint(this.bet, this.btc_set, this.btc_after);
 
     const data: NewGuess = {
-      userId: this.userId,
+      sessionId: this.sessionId,
       point: this.point,
       guess: this.bet,
     };
 
     this.api.storeGuess(data).then((e) => {
       setScore(e.data.score);
-      console.debug("response", e.data.guessId);
+      console.debug("response", e.data.sessionId);
     }).catch(e => console.error(e));
   }
 }

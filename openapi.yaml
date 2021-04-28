@@ -18,6 +18,9 @@ servers:
     basePath:
       default: "dev"
 
+security:
+  - sessionCookie: []
+
 paths:
   /session:
     get:
@@ -31,7 +34,7 @@ paths:
             Set-Cookie:
               schema: 
                 type: string
-                example: SESSION_ID=abcde12345; Path=/; HttpOnly
+                example: SESSION_ID=abcde12345; Path=/; SameSite=Lax 
           content:
             application/json: {}
 
@@ -53,9 +56,6 @@ paths:
         Enable CORS by returning correct headers in API Gateway
       tags:
         - CORS
-      security:
-        - sessionCookie: []
-      
       responses:
         "200":
           description: New guess is created
