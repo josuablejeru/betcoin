@@ -20,12 +20,12 @@ def handler(event, context):
 
     response = {
         "statusCode": 201,
-        "multiValueHeaders": {
-            "Set-Cookie": [
-                f"SESSION_ID={session.get('session_id')}; Domain=betcoin-app.xyz; Path=/; SameSite=None; Secure"
-            ]
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
         },
-        "body": json.dumps(session.get("response"))
+        "body": json.dumps({"sessionId": session.get("session_id")})
     }
 
     return response

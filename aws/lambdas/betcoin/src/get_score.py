@@ -5,16 +5,6 @@ import boto3
 from http.cookies import SimpleCookie
 
 
-def parse_event(event) -> dict:
-    parser = SimpleCookie()
-    parser.load(event.get('headers').get('Cookie'))
-    cookies = {}
-    for key, morsel in parser.items():
-        cookies[key] = morsel.value
-
-    return {"cookie": cookies}
-
-
 def get_score(session_id, table_name):
     table = boto3.resource('dynamodb').Table(table_name)
 
@@ -24,10 +14,10 @@ def get_score(session_id, table_name):
 
 
 def handler(event, context):
-    event = parse_event(event)
     table_name = os.getenv("DYNAMODB_TABLE")
+    print(event)
 
-    session_id = event.get('cookie').get('SESSION_ID')
+    session_id = event.get('pathParameters').get('sessionId')
 
     dynamo_response = get_score(
         session_id=session_id, table_name=table_name)
@@ -35,9 +25,14 @@ def handler(event, context):
     print(dynamo_response)
     score = dynamo_response.get("Score")
 
-    body = {"sessionId": session_id, "score": int(score)}
+    body = {"score": int(score)}
     response = {
         "statusCode": 200,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
         "body": json.dumps(body)
     }
 

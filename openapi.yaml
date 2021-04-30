@@ -31,7 +31,7 @@ paths:
         Create a new Game session for the user and returns the session cookie
       responses:
         "201":
-          description: The session id is returned in a cookie named `SESSION_ID`. This cookie is required for all game related endpoints
+          description: The sessionId is returned. This UUID is required for all game related endpoints
           headers:
             Set-Cookie:
               schema: 
@@ -46,7 +46,14 @@ paths:
             Access-Control-Allow-Headers:
               schema:
                 type: string
-          content: {}
+          content:
+             application/json:
+              schema:
+                $ref: '#/components/schemas/UserSessionResponse'
+              examples:
+                UserSession:
+                  value:
+                    sessionId: "a70704d3-734b-4a3c-8cd7-cc5472eb35dc"
 
       x-amazon-apigateway-integration:
         uri:
@@ -116,17 +123,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewGuess'
+              $ref: '#/components/schemas/NewGuessRequest'
             examples:
-              NewGuess:
+              NewGuessRequest:
                 value:
                   userId: 'foo'
                   point: -1
                   guess: "DOWN"
 
       responses:
-        "201":
-          description: foobar
+        "200":
+          description: new guess was sucessfull stored
           headers:
             Access-Control-Allow-Origin:
               schema:
@@ -140,7 +147,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Guess'
+                $ref: '#/components/schemas/GuessResponse'
 
         "400":
           description: Missing field
@@ -149,49 +156,86 @@ paths:
         uri:
           arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${store_guess_function}/invocations
         responses:
-          "201":
-            statusCode: "201"
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |
+                {}
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
 
-  /score:
+  /score/{sessionId}:
     get:
+      tags:
+        - CORS
       description: Get the current score of the user
+      parameters:
+        - in: path
+          name: sessionId
+          schema:
+            type: string
+          required: true
+          description: UUID of the user
+
       responses:
-        '200':
+        "200":
           description: Returns the current score of the user
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
           content:
-            'application/json':
+            application/json:
               schema:
                 type: object
                 items:
-                  $ref: '#/components/schemas/UserScore'
+                  $ref: '#/components/schemas/UserScoreResponse'
 
       x-amazon-apigateway-integration:
         uri:
           arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:${get_score_function}/invocations
         responses:
-          "200":
+         default:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |
+                {}
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         contentHandling: "CONVERT_TO_TEXT"
         type: "aws_proxy"
 
 components:
-  securitySchemes:
-    sessionCookie:
-      type: apiKey
-      in: cookie
-      name: SESSION_ID
-
   schemas:
-    NewGuess:
+
+    UserSessionResponse:
       type: object
       required:
-        - userId
+        - sessionId
+      properties:
+        sessionId:
+          type: string
+
+    NewGuessRequest:
+      type: object
+      required:
+        - sessionId 
         - point
         - guess
       properties:
@@ -206,7 +250,7 @@ components:
             - "UP"
             - "DOWN"
 
-    Guess:
+    GuessResponse:
       type: object
       required:
         - guessId
@@ -217,11 +261,16 @@ components:
         score:
           type: integer
 
-    UserScore:
+    UserScoreRequest:
+      type: object
+      required:
+        - sessionId
+      properties:
+        sessionId:
+          type: string
+
+    UserScoreResponse:
       type: object
       properties:
         score:
           type: integer
-        lastUpdated:
-          type: string
-          format: date-time

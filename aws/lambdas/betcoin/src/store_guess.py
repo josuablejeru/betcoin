@@ -2,6 +2,7 @@ import os
 import json
 import boto3
 import random
+import uuid
 
 from pprint import pprint
 
@@ -42,7 +43,7 @@ def handler(event, context):
     event = parse_event(event)
     table_name = os.getenv("DYNAMODB_TABLE")
 
-    session_id = event.get('cookie').get('SESSION_ID')
+    session_id = event.get('body').get('sessionId')
     point = event.get('body').get('point')
 
     dynamo_response = put_guess(
@@ -53,9 +54,14 @@ def handler(event, context):
 
     score = dynamo_response.get("Attributes").get("Score")
 
-    body = {"sessionId": session_id, "score": int(score)}
+    body = {"guessId": str(uuid.uuid4()), "score": int(score)}
     response = {
-        "statusCode": 201,
+        "statusCode": 200,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        },
         "body": json.dumps(body)
     }
 
