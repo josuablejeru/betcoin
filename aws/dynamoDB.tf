@@ -1,19 +1,12 @@
 resource "aws_dynamodb_table" "user_score" {
   name         = "${terraform.workspace}-user-score"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "UserId"
-  range_key    = "Score"
+  hash_key     = "SessionId"
 
   attribute {
-    name = "UserId"
+    name = "SessionId"
     type = "S"
   }
-
-  attribute {
-    name = "Score"
-    type = "N"
-  }
-
   tags = {
     "stage"   = terraform.workspace
     "project" = "betcoin"

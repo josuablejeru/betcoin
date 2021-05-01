@@ -1,11 +1,15 @@
+import { useContext } from "react";
 import { Box, Text } from "@chakra-ui/react";
+
+import { ScoreContext } from "../contexts";
 
 interface IProps {
   value: number;
 }
 
-const Score = ({ value }: IProps) => {
-  const color = setTextColor(value);
+const Score = () => {
+  const [scoreValue] = useContext(ScoreContext);
+  const color = setTextColor(scoreValue);
   return (
     <>
       <Box
@@ -15,7 +19,7 @@ const Score = ({ value }: IProps) => {
         textColor={color}
         overflow="hidden"
       >
-        <Text>Score: {value}</Text>
+        <Text>Score: {scoreValue}</Text>
       </Box>
     </>
   );

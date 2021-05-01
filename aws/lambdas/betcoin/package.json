@@ -9,7 +9,8 @@
     "remove:prod": "sls remove --stage prod",
     "getvars:dev": "sls print --stage dev",
     "getvars:prod": "sls print --stage prod",
-    "invoke:dev": "npm run deploy:dev && sls invoke -f store_guess --stage dev --path lib/store_up_positiv_point.json"
+    "invoke:dev": "npm run deploy:dev && sls invoke -f store_guess --stage dev --path lib/store_up_positiv_point.json",
+    "logs:dev": "sls logs --stage dev -f store_guess -t"
   },
   "devDependencies": {
     "serverless-python-requirements": "^5.1.1"

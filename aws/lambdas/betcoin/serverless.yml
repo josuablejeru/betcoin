@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: store-guess
+service: betcoin
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -43,11 +43,13 @@ package:
    - '!lib'
 
 functions:
+  create_session:
+    handler: src/create_session.handler
   store_guess:
-    handler: src/handler.store_guess
+    handler: src/store_guess.handler
+  get_score:
+    handler: src/get_score.handler
 
-    # Define function environment variables here
-    environment:
 
 plugins:
   - serverless-python-requirements
