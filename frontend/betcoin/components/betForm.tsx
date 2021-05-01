@@ -1,7 +1,8 @@
 import { RadioGroup, Radio } from "@chakra-ui/react";
-import { CoinContext } from "../contexts/coinContext";
+import { CoinContext, ScoreContext } from "../contexts/";
 import { useContext, useState } from "react";
 import { GuessRequest } from "../api";
+import * as ls from "local-storage";
 
 interface IProps {
   counterValue: number;
@@ -9,7 +10,9 @@ interface IProps {
 }
 
 const BetForm = ({ counterValue, setCounter }: IProps) => {
-  const [coinValue, _] = useContext(CoinContext);
+  const [coinValue] = useContext(CoinContext);
+  const [scoreValue, setScoreValue] = useContext(ScoreContext);
+
   const [inputDisabled, setInputDisabled] = useState(null);
 
   /**
@@ -21,13 +24,13 @@ const BetForm = ({ counterValue, setCounter }: IProps) => {
     event.preventDefault();
     setInputDisabled(true);
 
-    const request = new GuessRequest("123");
+    const request = new GuessRequest(ls.get<string>("SESSION_ID"));
     request.setFormData(new FormData(event.target));
 
     await sleep(1); // TODO: change timout
 
     request.setBtcAfter(coinValue);
-    request.resolve(setCounter);
+    request.resolve(setScoreValue);
 
     setInputDisabled(false);
   };

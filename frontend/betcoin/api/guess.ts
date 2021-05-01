@@ -1,12 +1,12 @@
-import { CORSApi, NewGuess } from "../generated-sources/openapi/";
-import { NewGuessGuessEnum } from "../generated-sources/openapi";
+import { CORSApi, NewGuessRequest } from "../generated-sources/openapi/";
+import { NewGuessRequestGuessEnum } from "../generated-sources/openapi";
 import { calculatePoint } from "../utils";
 
 export class GuessRequest {
   private sessionId: string;
   private btc_set: number;
   private btc_after: number;
-  private bet: NewGuessGuessEnum;
+  private bet: NewGuessRequestGuessEnum;
   private point: number;
   private api: CORSApi;
 
@@ -16,7 +16,7 @@ export class GuessRequest {
   }
 
   public setFormData(data: FormData): void {
-    this.bet = data.get("bet") as NewGuessGuessEnum;
+    this.bet = data.get("bet") as NewGuessRequestGuessEnum;
     this.btc_set = (data.get("coinValue") as unknown) as number;
   }
 
@@ -27,15 +27,19 @@ export class GuessRequest {
   public resolve(setScore: (n: number) => void) {
     this.point = calculatePoint(this.bet, this.btc_set, this.btc_after);
 
-    const data: NewGuess = {
+    const data: NewGuessRequest = {
       sessionId: this.sessionId,
       point: this.point,
       guess: this.bet,
     };
 
-    this.api.storeGuess(data).then((e) => {
-      setScore(e.data.score);
-      console.debug("response", e.data.sessionId);
-    }).catch(e => console.error(e));
+    console.debug(data);
+
+    this.api
+      .storeGuess(data)
+      .then((e) => {
+        setScore(e.data.score);
+      })
+      .catch((e) => console.error(e));
   }
 }

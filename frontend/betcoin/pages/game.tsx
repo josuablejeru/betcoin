@@ -1,15 +1,14 @@
 import { Box } from "@chakra-ui/react";
 import BetPlacer from "../components/betPlacer";
-import { useCookies } from "react-cookie";
 import { isEmpty } from "lodash";
 import { CORSApi } from "../generated-sources/openapi/api";
 import { useEffect } from "react";
+import * as ls from "local-storage";
 
 const Game = () => {
-  const [cookies, setCookie] = useCookies(["SESSION_ID"]);
   useEffect(() => {
-    createSession(cookies, setCookie);
-  });
+    createSession();
+  }, []);
 
   return (
     <>
@@ -20,16 +19,21 @@ const Game = () => {
   );
 };
 
-const createSession = (state, setter: any) => {
-  if (isEmpty(state)) {
+const createSession = () => {
+  const sessionId = ls.get<string>("SESSION_ID");
+
+  if (isEmpty(sessionId)) {
     const api = new CORSApi();
     const response = api.sessionGet();
-    const cookie = response.then(e => console.debug("cookie promis",e));
-    console.log("cookie", cookie);
+    response.then((e) => {
+      console.log(e.data.sessionId);
+      ls.set<string>("SESSION_ID", e.data.sessionId);
+    });
+
     return;
   }
 
-  console.debug("cookie found");
+  console.debug("session found");
 };
 
 export default Game;
