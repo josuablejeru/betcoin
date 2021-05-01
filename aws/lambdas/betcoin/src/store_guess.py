@@ -4,22 +4,6 @@ import boto3
 import random
 import uuid
 
-from pprint import pprint
-
-from http.cookies import SimpleCookie
-
-
-def parse_event(event) -> dict:
-    parser = SimpleCookie()
-    parser.load(event.get('headers').get('Cookie'))
-    cookies = {}
-    for key, morsel in parser.items():
-        cookies[key] = morsel.value
-
-    body = json.loads(event['body'])
-
-    return {"cookie": cookies, "body": body}
-
 
 def put_guess(session_id, point, table_name):
     table = boto3.resource('dynamodb').Table(table_name)
@@ -40,11 +24,11 @@ def put_guess(session_id, point, table_name):
 
 
 def handler(event, context):
-    event = parse_event(event)
+    body = json.loads(event['body'])
     table_name = os.getenv("DYNAMODB_TABLE")
 
-    session_id = event.get('body').get('sessionId')
-    point = event.get('body').get('point')
+    session_id = body.get('sessionId')
+    point = body.get('point')
 
     dynamo_response = put_guess(
         session_id=session_id,
