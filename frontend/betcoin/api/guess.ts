@@ -4,7 +4,7 @@ import { calculatePoint } from "../utils";
 
 export class GuessRequest {
   private sessionId: string;
-  private btc_set: number;
+  private btc_before: number;
   private btc_after: number;
   private bet: NewGuessRequestGuessEnum;
   private point: number;
@@ -17,15 +17,18 @@ export class GuessRequest {
 
   public setFormData(data: FormData): void {
     this.bet = data.get("bet") as NewGuessRequestGuessEnum;
-    this.btc_set = (data.get("coinValue") as unknown) as number;
+  }
+
+  public setBtcBefore(coinValue: number) {
+    this.btc_before = clone(coinValue);
   }
 
   public setBtcAfter(coinValue: number) {
     this.btc_after = coinValue;
   }
 
-  public resolve(setScore: (n: number) => void) {
-    this.point = calculatePoint(this.bet, this.btc_set, this.btc_after);
+  public resolve(setScore: (n: number) => void): void {
+    this.point = calculatePoint(this.bet, this.btc_before, this.btc_after);
 
     const data: NewGuessRequest = {
       sessionId: this.sessionId,

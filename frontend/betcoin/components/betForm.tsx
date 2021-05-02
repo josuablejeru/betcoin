@@ -45,7 +45,6 @@ const BetForm = ({ counterValue, setCounter }: IProps) => {
           DOWN
         </Radio>
       </RadioGroup>
-      <input type="hidden" name="coinValue" value={coinValue} />
       <input type="submit" value="Submit" disabled={inputDisabled} />
     </form>
   );

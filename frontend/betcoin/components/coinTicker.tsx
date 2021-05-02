@@ -5,7 +5,7 @@ import { CoinContext } from "../contexts/coinContext";
 
 const CoinTicker = () => {
   const [orders, setOrders] = useState([]);
-  const [_, setCoinValue] = useContext(CoinContext);
+  const [coinValue, setCoinValue] = useContext(CoinContext);
 
   useEffect(() => {
     const ws = new WebSocket("wss://ws-feed.gdax.com");
