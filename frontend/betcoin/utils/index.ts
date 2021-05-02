@@ -1,17 +1,9 @@
-export const calculatePoint = (
-  bet: string,
-  coinValue: number,
-  currentValue: number
-) => {
-  if (coinValue > currentValue && bet == "UP") {
-    console.log(coinValue, currentValue);
-    return 1;
-  }
-  if (coinValue < currentValue && bet == "DOWN") {
-    console.log(coinValue, currentValue);
+export const calculatePoint = (bet: string, before: number, after: number) => {
+  if ((bet === "UP" && before < after) || (bet === "DOWN" && before > after)) {
+    console.debug(before, after);
     return 1;
   }
 
-  console.log(coinValue, currentValue);
+  console.debug(before, after);
   return -1;
 };
