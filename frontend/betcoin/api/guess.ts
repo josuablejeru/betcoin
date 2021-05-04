@@ -20,7 +20,7 @@ export class GuessRequest {
   }
 
   public setBtcBefore(coinValue: number) {
-    this.btc_before = clone(coinValue);
+    this.btc_before = coinValue;
   }
 
   public setBtcAfter(coinValue: number) {
