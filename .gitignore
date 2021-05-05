@@ -208,3 +208,8 @@ override.tf.json
 
 # Swagger / Openapi
 generated-sources/
+
+
+# IDEAS
+.idea/
+.vscode/
