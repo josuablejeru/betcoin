@@ -1,16 +1,39 @@
-import { Heading, Link, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import BetPlacer from "../components/betPlacer";
+import { isEmpty } from "lodash";
+import { CORSApi } from "../generated-sources/openapi/api";
+import { useEffect } from "react";
+import * as ls from "local-storage";
 
-export default function Home() {
+const Game = () => {
+  useEffect(() => {
+    createSession();
+  }, []);
+
   return (
     <>
-      <VStack spacing={6}>
-        <Heading as="h1" size="2xl" mb="2">
-          Welcome to Betcoin!
-        </Heading>
-        <Link color="teal.500" href="/game">
-          Start the game here!!
-        </Link>
-      </VStack>
+      <Box p={8}>
+        <BetPlacer />
+      </Box>
     </>
   );
-}
+};
+
+const createSession = () => {
+  const sessionId = ls.get<string>("SESSION_ID");
+
+  if (isEmpty(sessionId)) {
+    const api = new CORSApi();
+    const response = api.sessionGet();
+    response.then((e) => {
+      console.log(e.data.sessionId);
+      ls.set<string>("SESSION_ID", e.data.sessionId);
+    });
+
+    return;
+  }
+
+  console.debug("session found");
+};
+
+export default Game;

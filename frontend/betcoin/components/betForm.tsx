@@ -1,19 +1,27 @@
 import { RadioGroup, Radio } from "@chakra-ui/react";
 import { CoinContext, ScoreContext } from "../contexts/";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GuessRequest } from "../api";
 import * as ls from "local-storage";
 
-interface IProps {
-  counterValue: number;
-  setCounter: any;
-}
-
-const BetForm = ({ counterValue, setCounter }: IProps) => {
+const BetForm = () => {
   const [coinValue] = useContext(CoinContext);
   const [scoreValue, setScoreValue] = useContext(ScoreContext);
 
   const [inputDisabled, setInputDisabled] = useState(null);
+  const [guessRequest, setGuessRequest] = useState(null);
+
+  useEffect(() => {
+    if (guessRequest && guessRequest.pending === false) {
+      const request = new GuessRequest(ls.get<string>("SESSION_ID"));
+      request.setFormData(guessRequest.guess);
+      request.setBtcBefore(guessRequest.btc_value);
+      request.setBtcAfter(coinValue);
+      request.resolve(setScoreValue);
+
+      console.debug(request);
+    }
+  }, [guessRequest]);
 
   /**
    * Disables the form controlls for one minute after submitting a new bet.
@@ -24,14 +32,12 @@ const BetForm = ({ counterValue, setCounter }: IProps) => {
     event.preventDefault();
     setInputDisabled(true);
 
-    const request = new GuessRequest(ls.get<string>("SESSION_ID"));
-    request.setFormData(new FormData(event.target));
+    const guess = { btc_value: coinValue, guess: new FormData(event.target), pending: true };
+    setGuessRequest(guess);
 
-    await sleep(1); // TODO: change timout
+    await sleep(60);
 
-    request.setBtcAfter(coinValue);
-    request.resolve(setScoreValue);
-
+    setGuessRequest({ ...guess, pending: false });
     setInputDisabled(false);
   };
 
@@ -50,8 +56,8 @@ const BetForm = ({ counterValue, setCounter }: IProps) => {
   );
 };
 
-const sleep = (secons: number) => {
-  return new Promise((resolve) => setTimeout(resolve, secons * 1000));
+const sleep = (seconds: number) => {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 };
 
 export default BetForm;
