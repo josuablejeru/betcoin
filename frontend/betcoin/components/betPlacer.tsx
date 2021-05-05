@@ -3,7 +3,6 @@ import CoinTicker from "../components/coinTicker";
 import Score from "../components/score";
 import BetForm from "./betForm";
 import { CoinProvider, ScoreProvider } from "../contexts/";
-import { useState } from "react";
 
 const BetPlacer = () => {
   return (

@@ -35,7 +35,7 @@ const BetForm = () => {
     const guess = { btc_value: coinValue, guess: new FormData(event.target), pending: true };
     setGuessRequest(guess);
 
-    await sleep(10); // TODO: change timout
+    await sleep(60);
 
     setGuessRequest({ ...guess, pending: false });
     setInputDisabled(false);
@@ -56,8 +56,8 @@ const BetForm = () => {
   );
 };
 
-const sleep = (secons: number) => {
-  return new Promise((resolve) => setTimeout(resolve, secons * 1000));
+const sleep = (seconds: number) => {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 };
 
 export default BetForm;
