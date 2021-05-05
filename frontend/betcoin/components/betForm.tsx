@@ -4,12 +4,7 @@ import { useContext, useState, useEffect } from "react";
 import { GuessRequest } from "../api";
 import * as ls from "local-storage";
 
-interface IProps {
-  counterValue: number;
-  setCounter: any;
-}
-
-const BetForm = ({ counterValue, setCounter }: IProps) => {
+const BetForm = () => {
   const [coinValue] = useContext(CoinContext);
   const [scoreValue, setScoreValue] = useContext(ScoreContext);
 
