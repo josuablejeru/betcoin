@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "site_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = "index.html"
+  default_root_object = "game.html"
 
   aliases = [
     var.domain_name
